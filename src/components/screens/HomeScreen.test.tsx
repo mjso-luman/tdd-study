@@ -24,8 +24,7 @@ describe("HomeScreen", () => {
   it("should have File Upload button", async () => {
     const screen = renderWithContext(<HomeScreen />);
     await waitFor(() => {
-      const button = screen.getByText("File Upload");
-      expect(button).toBeTruthy();
+      screen.getByText("File Upload");
     });
   });
 
@@ -55,8 +54,7 @@ describe("HomeScreen", () => {
     const screen = renderWithContext(<HomeScreen />);
     await waitFor(() => {
       files.forEach((file) => {
-        const listItem = screen.getByText(file.title);
-        expect(listItem).toBeTruthy();
+        screen.getByText(file.title);
       });
     });
   });
@@ -79,7 +77,7 @@ describe("HomeScreen", () => {
     const screen = renderWithContext(<HomeScreen />);
     await waitFor(() => {
       expect(screen.queryByTestId("loading-indicator")).toBeNull();
-      expect(screen.getByText("Something went wrong.")).toBeTruthy();
+      screen.getByText("Something went wrong.");
     });
   });
 

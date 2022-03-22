@@ -30,7 +30,6 @@ describe("Button", () => {
 
     const button = getByText(buttonText);
 
-    expect(button).toBeTruthy();
     fireEvent.press(button);
     expect(onPress).toBeCalledTimes(0);
   });

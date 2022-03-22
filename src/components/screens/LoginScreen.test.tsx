@@ -24,9 +24,7 @@ describe("LoginScreen", () => {
   it("should have login button", () => {
     const { getByText } = render(<LoginScreen />);
 
-    const loginButton = getByText(loginText);
-
-    expect(loginButton).toBeTruthy();
+    getByText(loginText);
   });
 
   it("should go to Home on login button click", async () => {

@@ -24,11 +24,8 @@ describe("Tabs", () => {
   it("should render all tabs", () => {
     const { getByText } = renderTabs();
 
-    const tabA = getByText("Admin");
-    const tabB = getByText("General");
-
-    expect(tabA).toBeTruthy();
-    expect(tabB).toBeTruthy();
+    getByText("Admin");
+    getByText("General");
   });
 
   it("should call handler function on tab click", () => {
