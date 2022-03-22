@@ -12,7 +12,7 @@
     "testDebug": "jest -o --watch --coverage=false",
     "testFinal": "jest",
     "updateSnapshots": "jest -u --coverage=false",
-    "posttest": "open jest.report.html"
+    "posttest": "open coverage/jest.report.html"
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.8",
