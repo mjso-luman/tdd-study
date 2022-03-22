@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import Tabs from "../atoms/Tabs";
 import BasicTemplate from "../templates/BasicTemplate";
 import { tabs } from "../../fixtures/tabs";
-import useFileList from "../../hooks/useFileList";
 import Button from "../atoms/Button";
 import * as ImagePicker from "expo-image-picker";
 import { useAppDispatch, useAppSelector } from "../../redux/store/hooks";
@@ -43,7 +42,7 @@ const HomeScreen = () => {
   let content;
 
   if (fileStatus === "loading") {
-    content = <ActivityIndicator />;
+    content = <ActivityIndicator testID="loading-indicator" />;
   } else if (fileStatus === "succeeded") {
     content = (
       <View style={styles.listContainer}>
@@ -70,7 +69,8 @@ const HomeScreen = () => {
   } else if (fileStatus === "failed") {
     content = (
       <View>
-        <Text>{error}</Text>
+        <Text>Something went wrong.</Text>
+        <Text>[ERROR] : {error}</Text>
       </View>
     );
   }

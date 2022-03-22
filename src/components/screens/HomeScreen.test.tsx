@@ -74,6 +74,15 @@ describe("HomeScreen", () => {
     });
   });
 
+  it("should show error info message on response error", async () => {
+    mock.onGet(getFileListEnpoint).networkError();
+    const screen = renderWithContext(<HomeScreen />);
+    await waitFor(() => {
+      expect(screen.queryByTestId("loading-indicator")).toBeNull();
+      expect(screen.getByText("Something went wrong.")).toBeTruthy();
+    });
+  });
+
   test.todo("should show info modal when the user is on waiting list");
   test.todo("should show 'start download' modal when the waiting is end");
 });

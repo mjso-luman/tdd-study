@@ -43,8 +43,19 @@ describe("filesSlice", () => {
       mock.onGet(getFileListEnpoint).reply(200, files);
       const state: RootState = getStateWithRole("admin");
       const store = getStoreWithState(state);
+
       await store.dispatch(fetchFiles());
       expect(store.getState().files.files).toEqual(files);
+    });
+    it("should be loading before fetching files list", async () => {
+      mock.onGet(getFileListEnpoint).reply(200, files);
+      const state: RootState = getStateWithRole("admin");
+      const store = getStoreWithState(state);
+
+      const action = store.dispatch(fetchFiles());
+      expect(store.getState().files.status).toEqual("loading");
+      await action;
+      expect(store.getState().files.status).toEqual("succeeded");
     });
   });
 });

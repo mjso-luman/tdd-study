@@ -7,7 +7,7 @@ export const fetchFileList = async () => {
     const res = await Client.get(GET_FILE_LIST);
     return res;
   } catch (e) {
-    // TODO : 서버단 구현이 안돼있을 땐 이 부분은 어떻게 해야 하는가?
+    // NOTE : 테스트 위해 임시로 dummy data 넘겨줌.
     return { data: files };
   }
 };
