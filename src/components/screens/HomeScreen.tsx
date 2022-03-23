@@ -24,6 +24,7 @@ const HomeScreen = () => {
     data: files,
   } = useQuery('fetchFiles', fetchFileList);
 
+  const a = '';
   // console.log("?? ", files);
 
   const dispatch = useAppDispatch();
