@@ -5,7 +5,6 @@ import {
   Text,
   ActivityIndicator,
   Platform,
-  Button as RnButton,
 } from 'react-native';
 import Tabs from '../atoms/Tabs';
 import BasicTemplate from '../templates/BasicTemplate';
@@ -48,38 +47,38 @@ const HomeScreen = () => {
   };
 
   const handleFileUploadClick = async () => {
-    await launchImageLibrary(
-      { selectionLimit: 1, mediaType: 'photo' },
-      async (res) => {
-        if (res) {
-          // setPhoto(res);
-          console.log('RES? ', res);
-          const data: any = new FormData();
-          res.assets?.forEach((asset) => {
-            const temp = {
-              name: asset.fileName,
-              type: asset.type,
-              uri:
-                Platform.OS === 'android'
-                  ? asset.uri
-                  : asset.uri?.replace('file://', ''),
-            };
-            data.append('images', temp);
-          });
-          const response = await postUploadFile(data);
-          if (!response?.data) {
-            const { status } = response.data;
-            if (status === 'waiting') {
-              setInfo(
-                `4명 이상이 업로드 중입니다. 대기번호 :  ${response.data.waitingNumber}`
-              );
-            } else if (status === 'upload-available') {
-              // TODO : upload file
-            }
-          }
-        }
-      }
-    );
+    // await launchImageLibrary(
+    //   { selectionLimit: 1, mediaType: 'photo' },
+    //   async (res) => {
+    //     if (res) {
+    //       // setPhoto(res);
+    //       console.log('RES? ', res);
+    //       const data: any = new FormData();
+    //       res.assets?.forEach((asset) => {
+    //         const temp = {
+    //           name: asset.fileName,
+    //           type: asset.type,
+    //           uri:
+    //             Platform.OS === 'android'
+    //               ? asset.uri
+    //               : asset.uri?.replace('file://', ''),
+    //         };
+    //         data.append('images', temp);
+    //       });
+    //       const response = await postUploadFile(data);
+    //       if (!response?.data) {
+    //         const { status } = response.data;
+    //         if (status === 'waiting') {
+    //           setInfo(
+    //             `4명 이상이 업로드 중입니다. 대기번호 :  ${response.data.waitingNumber}`
+    //           );
+    //         } else if (status === 'upload-available') {
+    //           // TODO : upload file
+    //         }
+    //       }
+    //     }
+    //   }
+    // );
 
     // let result = await ImagePicker.launchImageLibraryAsync({
     //   mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -90,17 +89,18 @@ const HomeScreen = () => {
 
     // console.log("[INFO] File Selection Result : ", result);
 
-    // const response = await postUploadFile();
-    // if (!!response?.data) {
-    //   const { status } = response.data;
-    //   if (status === "waiting") {
-    //     setInfo(
-    //       `4명 이상이 업로드 중입니다. 대기번호 :  ${response.data.waitingNumber}`
-    //     );
-    //   } else if (status === "upload-available") {
-    //     // TODO : upload file
-    //   }
-    // }
+    const response = await postUploadFile({ data: 'test' });
+    if (response?.data) {
+      const { status } = response.data;
+      if (status === 'waiting') {
+        console.log('waiting!! ');
+        setInfo(
+          `4명 이상이 업로드 중입니다. 대기번호 :  ${response.data.waitingNumber}`
+        );
+      } else if (status === 'upload-available') {
+        // TODO : upload file
+      }
+    }
   };
 
   let content;
@@ -132,6 +132,7 @@ const HomeScreen = () => {
                   }}
                   height={25}
                   fontSize={12}
+                  testId={`download-button-${file.title}`}
                 />
               ) : null}
             </View>
@@ -146,7 +147,11 @@ const HomeScreen = () => {
       <Tabs selected={selectedTab} tabs={tabs} handleClick={handleClick} />
       <View>
         <View style={styles.buttonContainer}>
-          <Button title="File Upload" onPress={handleFileUploadClick} />
+          <Button
+            title="File Upload"
+            onPress={handleFileUploadClick}
+            testId="upload-button"
+          />
           {!!info && <Text style={styles.info}>{info}</Text>}
         </View>
         {content}

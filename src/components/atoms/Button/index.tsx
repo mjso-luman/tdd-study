@@ -8,14 +8,18 @@ type ButtonProps = {
   fontSize?: number;
   height?: number;
   onPress(): void;
+  testId: string;
 };
 
 const Button = (props: ButtonProps) => {
-  const { title, onPress, type } = props;
+  const { title, onPress, type, testId } = props;
   const styles = getStyles(theme, props);
 
   return (
-    <TouchableOpacity onPress={type === 'disabled' ? () => {} : onPress}>
+    <TouchableOpacity
+      onPress={type === 'disabled' ? () => {} : onPress}
+      testID={testId}
+    >
       <View style={styles.root}>
         <Text style={styles.title}>{title}</Text>
       </View>

@@ -9,6 +9,13 @@ import Client from '../../fixtures/client';
 import { files } from '../../fixtures/dummy';
 import { getStateWithRole } from '../../../test-utils';
 
+jest.mock('rn-fetch-blob', () => {
+  return {
+    DocumentDir: () => {},
+    polyfill: () => {},
+  };
+});
+
 const getFileListEndpoint = `${API_URL}${GET_FILE_LIST}`;
 const postUploadFileEndpoint = `${API_URL}${UPLOAD_FILE}`;
 
@@ -83,11 +90,16 @@ describe('HomeScreen', () => {
   });
 
   it('should show info text when the user is on waiting list', async () => {
+    mock.onGet(getFileListEndpoint).reply(200, files);
     mock
       .onPost(postUploadFileEndpoint)
       .reply(200, { status: 'waiting', waitingNumber: 3 });
-    // const screen = renderWithContext(<HomeScreen />);
-    // await waitFor(() => {});
+    const screen = renderWithContext(<HomeScreen />);
+    await waitFor(() => {
+      const uploadButton = screen.getByTestId('upload-button');
+      fireEvent.press(uploadButton);
+      screen.getByText(/대기번호 :/i);
+    });
   });
-  test.todo("should show 'start download' modal when the waiting is end");
+  test.todo('should call download function with parameter');
 });

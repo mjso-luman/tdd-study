@@ -9,6 +9,7 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+import Button from '../../atoms/Button';
 
 const Dashboard = () => {
   const fileUrl = 'http://localhost:4001/download/lionking.jpeg';
@@ -85,7 +86,7 @@ const Dashboard = () => {
           useDownloadManager: true,
           notification: true,
           path: fPath,
-          description: 'Downloading xlsx...',
+          description: 'Downloading image...',
         },
       },
     });
@@ -125,7 +126,7 @@ const Dashboard = () => {
   return (
     <View style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <Text style={{ fontSize: 25, textAlign: 'center' }}>
+        <Text style={{ fontSize: 15, textAlign: 'center' }}>
           React Native File Download Example
         </Text>
       </View>
@@ -140,9 +141,14 @@ const Dashboard = () => {
           margin: 5,
         }}
       />
-      <TouchableOpacity style={styles.button} onPress={checkPermission}>
-        <Text style={styles.text}>Download File</Text>
-      </TouchableOpacity>
+      <Button
+        title="Download Image"
+        onPress={checkPermission}
+        testId="image-download-button"
+        width={200}
+        height={30}
+        type="secondary"
+      />
     </View>
   );
 };

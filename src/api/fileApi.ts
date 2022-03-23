@@ -17,7 +17,6 @@ export const fetchFileList = async () => {
 };
 
 export const postUploadFile = async (data: any) => {
-  console.log('DATA?', data);
   const res = await Client.post(UPLOAD_FILE, data, {
     headers: {
       'Content-Type': 'multipart/form-data',
