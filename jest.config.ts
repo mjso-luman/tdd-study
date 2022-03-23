@@ -14,7 +14,7 @@ const config: Config.InitialOptions = {
     '!**/babel.config.js',
     '!**/jest.setup.js',
   ],
-  setupFiles: ['./jest.mock.js'],
+  setupFiles: ['./jest.mock.ts'],
   reporters: [
     'default',
     [
