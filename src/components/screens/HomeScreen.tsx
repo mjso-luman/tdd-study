@@ -5,6 +5,7 @@ import {
   Text,
   ActivityIndicator,
   Platform,
+  Button as RnButton,
 } from 'react-native';
 import Tabs from '../atoms/Tabs';
 import BasicTemplate from '../templates/BasicTemplate';
@@ -24,7 +25,6 @@ const HomeScreen = () => {
     data: files,
   } = useQuery('fetchFiles', fetchFileList);
 
-  const a = 'aaabbcc';
   // console.log("?? ", files);
 
   const dispatch = useAppDispatch();
