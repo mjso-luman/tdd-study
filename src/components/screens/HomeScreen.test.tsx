@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, waitFor } from '@testing-library/react-native';
+import { fireEvent, waitFor, act } from '@testing-library/react-native';
 import { renderWithContext } from '../../../test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import { API_URL } from '../../fixtures/client';
@@ -8,13 +8,25 @@ import HomeScreen from './HomeScreen';
 import Client from '../../fixtures/client';
 import { files } from '../../fixtures/dummy';
 import { getStateWithRole } from '../../../test-utils';
+import RnFetchBlob from 'rn-fetch-blob';
 
-jest.mock('rn-fetch-blob', () => {
-  return {
-    DocumentDir: () => {},
-    polyfill: () => {},
-  };
-});
+jest.mock(
+  'rn-fetch-blob',
+  () => {
+    const mRNFetchBlob = {
+      config: jest.fn(),
+      fetch: jest.fn(),
+      fs: {
+        dirs: {
+          DocumentDir: '',
+          DownloadDir: '',
+        },
+      },
+    };
+    return mRNFetchBlob;
+  },
+  { virtual: true }
+);
 
 const getFileListEndpoint = `${API_URL}${GET_FILE_LIST}`;
 const postUploadFileEndpoint = `${API_URL}${UPLOAD_FILE}`;
@@ -23,6 +35,10 @@ describe('HomeScreen', () => {
   let mock: MockAdapter;
   beforeAll(() => {
     mock = new MockAdapter(Client);
+  });
+
+  beforeEach(() => {
+    mock.onGet(getFileListEndpoint).reply(200, files);
   });
 
   afterEach(() => {
@@ -68,7 +84,7 @@ describe('HomeScreen', () => {
   });
 
   it('download button is visible only to admin', async () => {
-    mock.onGet(getFileListEndpoint).reply(200, files);
+    // mock.onGet(getFileListEndpoint).reply(200, files);
 
     // NOTE : role의 원래 기본값은 'general'인데, 여기선 admin으로 세팅해서 테스트 해봄.
     const screen = renderWithContext(<HomeScreen />, getStateWithRole('admin'));
@@ -90,7 +106,7 @@ describe('HomeScreen', () => {
   });
 
   it('should show info text when the user is on waiting list', async () => {
-    mock.onGet(getFileListEndpoint).reply(200, files);
+    // mock.onGet(getFileListEndpoint).reply(200, files);
     mock
       .onPost(postUploadFileEndpoint)
       .reply(200, { status: 'waiting', waitingNumber: 3 });
@@ -101,5 +117,14 @@ describe('HomeScreen', () => {
       screen.getByText(/대기번호 :/i);
     });
   });
-  test.todo('should call download function with parameter');
+
+  it('should call rnfetchblob config method to download image', async () => {
+    const screen = renderWithContext(<HomeScreen />);
+    await waitFor(() => {
+      const downloadButton = screen.getByTestId('image-download-button');
+      fireEvent.press(downloadButton);
+      expect(RnFetchBlob.config).toBeCalledTimes(1);
+    });
+  });
+  it.todo('should call download function with parameter');
 });

@@ -5,7 +5,7 @@ import {
   Image,
   StyleSheet,
   Platform,
-  TouchableOpacity,
+  Alert,
   PermissionsAndroid,
 } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -37,7 +37,7 @@ const Dashboard = () => {
           console.log('Storage Permission Granted.');
         } else {
           // If permission denied then show alert
-          alert('Error: Storage Permission Not Granted');
+          Alert.alert('Error: Storage Permission Not Granted');
         }
       } catch (err) {
         // To handle permission related exception
@@ -59,6 +59,7 @@ const Dashboard = () => {
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
     const { config, fs } = RNFetchBlob;
+
     // let RootDir = fs.dirs.PictureDir;
     const isIOS = Platform.OS == 'ios';
     const aPath = Platform.select({

@@ -93,7 +93,6 @@ const HomeScreen = () => {
     if (response?.data) {
       const { status } = response.data;
       if (status === 'waiting') {
-        console.log('waiting!! ');
         setInfo(
           `4명 이상이 업로드 중입니다. 대기번호 :  ${response.data.waitingNumber}`
         );
