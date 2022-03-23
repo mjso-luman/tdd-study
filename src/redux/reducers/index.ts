@@ -1,5 +1,5 @@
-import userReducer from "./userSlice";
-import filesReducer from "./filesSlice";
+import userReducer from './userSlice';
+import filesReducer from './filesSlice';
 
 const reducer = {
   user: userReducer,

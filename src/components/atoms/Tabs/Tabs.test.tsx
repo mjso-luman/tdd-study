@@ -1,17 +1,17 @@
-import React from "react";
-import { render, fireEvent, cleanup } from "@testing-library/react-native";
-import Tabs from "./";
+import React from 'react';
+import { render, fireEvent, cleanup } from '@testing-library/react-native';
+import Tabs from './';
 
 const handleClick = jest.fn();
 
 const tabs = [
   {
-    id: "admin",
-    title: "Admin",
+    id: 'admin',
+    title: 'Admin',
   },
   {
-    id: "general",
-    title: "General",
+    id: 'general',
+    title: 'General',
   },
 ];
 
@@ -20,18 +20,18 @@ const renderTabs = () =>
 
 afterEach(cleanup);
 
-describe("Tabs", () => {
-  it("should render all tabs", () => {
+describe('Tabs', () => {
+  it('should render all tabs', () => {
     const { getByText } = renderTabs();
 
-    getByText("Admin");
-    getByText("General");
+    getByText('Admin');
+    getByText('General');
   });
 
-  it("should call handler function on tab click", () => {
+  it('should call handler function on tab click', () => {
     const { getByText } = renderTabs();
 
-    fireEvent.press(getByText("General"));
+    fireEvent.press(getByText('General'));
     expect(handleClick).toBeCalledTimes(1);
   });
 });

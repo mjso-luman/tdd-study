@@ -1,11 +1,11 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios from 'axios';
 
-export const API_URL = "http://localhost:4000";
+export const API_URL = 'http://localhost:4001';
 
 const Client = axios.create({
   baseURL: `${API_URL}`,
   headers: {
-    Accept: "application/json",
+    Accept: 'application/json',
     useQueryString: true,
   },
 });

@@ -1,13 +1,13 @@
-import { View, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { AppNavigatorParams } from "../../types/navigator";
-import BasicTemplate from "../templates/BasicTemplate";
-import Button from "../atoms/Button";
+import { View, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { AppNavigatorParams } from '../../types/navigator';
+import BasicTemplate from '../templates/BasicTemplate';
+import Button from '../atoms/Button';
 
-type LoginScreenProp = StackNavigationProp<AppNavigatorParams, "Login">;
+type LoginScreenProp = StackNavigationProp<AppNavigatorParams, 'Login'>;
 
-const LoginScreen = ({}) => {
+const LoginScreen = () => {
   const navigation = useNavigation<LoginScreenProp>();
 
   return (
@@ -17,7 +17,7 @@ const LoginScreen = ({}) => {
           title="Login"
           type="secondary"
           onPress={() => {
-            navigation.navigate("Home");
+            navigation.navigate('Home');
           }}
         />
       </View>

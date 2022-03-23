@@ -1,78 +1,143 @@
-import { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
-import Tabs from "../atoms/Tabs";
-import BasicTemplate from "../templates/BasicTemplate";
-import { tabs } from "../../fixtures/tabs";
-import Button from "../atoms/Button";
-import * as ImagePicker from "expo-image-picker";
-import { useAppDispatch, useAppSelector } from "../../redux/store/hooks";
-import { updateRole, selectUser } from "../../redux/reducers/userSlice";
-import { selectAllFiles, fetchFiles } from "../../redux/reducers/filesSlice";
+import { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
+import Tabs from '../atoms/Tabs';
+import BasicTemplate from '../templates/BasicTemplate';
+import { tabs } from '../../fixtures/tabs';
+import Button from '../atoms/Button';
+import { useAppDispatch, useAppSelector } from '../../redux/store/hooks';
+import { updateRole, selectUser } from '../../redux/reducers/userSlice';
+import { useQuery } from 'react-query';
+import { fetchFileList, postUploadFile } from '../../api/fileApi';
+import Dashboard from '../molecules/DownloadFile';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const HomeScreen = () => {
+  const {
+    isLoading,
+    error,
+    data: files,
+  } = useQuery('fetchFiles', fetchFileList);
+
+  // console.log("?? ", files);
+
   const dispatch = useAppDispatch();
   const { role } = useAppSelector(selectUser);
-  const files = useAppSelector(selectAllFiles);
-  const fileStatus = useAppSelector((state) => state.files.status);
-  const error = useAppSelector((state) => state.files.error);
+  // const files = useAppSelector(selectAllFiles);
+  // const fileStatus = useAppSelector((state) => state.files.status);
+  // const error = useAppSelector((state) => state.files.error);
   const [selectedTab, setSelected] = useState(role);
+  const [info, setInfo] = useState('');
+  // const [photo, setPhoto] = useState<ImagePickerResponse>();
 
-  useEffect(() => {
-    if (fileStatus === "idle") {
-      dispatch(fetchFiles());
-    }
-  }, [fileStatus, dispatch]);
+  // useEffect(() => {
+  //   if (fileStatus === "idle") {
+  //     dispatch(fetchFiles());
+  //   }
+  // }, [fileStatus, dispatch]);
 
   const handleClick = (id: string) => {
-    setSelected(id === "admin" ? "admin" : "general");
-    dispatch(updateRole(id === "admin" ? "admin" : "general"));
+    setSelected(id === 'admin' ? 'admin' : 'general');
+    dispatch(updateRole(id === 'admin' ? 'admin' : 'general'));
   };
 
   const handleFileUploadClick = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    await launchImageLibrary(
+      { selectionLimit: 1, mediaType: 'photo' },
+      async (res) => {
+        if (res) {
+          // setPhoto(res);
+          console.log('RES? ', res);
+          const data: any = new FormData();
+          res.assets?.forEach((asset) => {
+            const temp = {
+              name: asset.fileName,
+              type: asset.type,
+              uri:
+                Platform.OS === 'android'
+                  ? asset.uri
+                  : asset.uri?.replace('file://', ''),
+            };
+            data.append('images', temp);
+          });
+          const response = await postUploadFile(data);
+          if (!response?.data) {
+            const { status } = response.data;
+            if (status === 'waiting') {
+              setInfo(
+                `4명 이상이 업로드 중입니다. 대기번호 :  ${response.data.waitingNumber}`
+              );
+            } else if (status === 'upload-available') {
+              // TODO : upload file
+            }
+          }
+        }
+      }
+    );
 
-    console.log("[INFO] File Selection Result : ", result);
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //   allowsEditing: true,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
+
+    // console.log("[INFO] File Selection Result : ", result);
+
+    // const response = await postUploadFile();
+    // if (!!response?.data) {
+    //   const { status } = response.data;
+    //   if (status === "waiting") {
+    //     setInfo(
+    //       `4명 이상이 업로드 중입니다. 대기번호 :  ${response.data.waitingNumber}`
+    //     );
+    //   } else if (status === "upload-available") {
+    //     // TODO : upload file
+    //   }
+    // }
   };
 
   let content;
 
-  if (fileStatus === "loading") {
-    content = <ActivityIndicator testID="loading-indicator" />;
-  } else if (fileStatus === "succeeded") {
-    content = (
-      <View style={styles.listContainer}>
-        <Text style={styles.listTitle}>Files List</Text>
-        {files?.map((file) => (
-          <View key={file.id} style={styles.item}>
-            <Text>
-              {file.title} <Text style={{ fontSize: 10 }}>{file.desc}</Text>
-            </Text>
-            {role === "admin" ? (
-              <Button
-                title="download"
-                onPress={() => {
-                  console.log("download ", file.title);
-                }}
-                height={25}
-                fontSize={12}
-              />
-            ) : null}
-          </View>
-        ))}
-      </View>
-    );
-  } else if (fileStatus === "failed") {
-    content = (
-      <View>
-        <Text>Something went wrong.</Text>
-        <Text>[ERROR] : {error}</Text>
-      </View>
-    );
+  if (isLoading) {
+    content = <ActivityIndicator testID="loading-indicator" size="large" />;
+  } else {
+    if (error) {
+      content = (
+        <View>
+          <Text>Something went wrong.</Text>
+          <Text>[ERROR] : {(error as Error).message}</Text>
+        </View>
+      );
+    } else {
+      content = (
+        <View style={styles.listContainer}>
+          <Text style={styles.listTitle}>Files List</Text>
+          {files?.data?.map((file: any) => (
+            <View key={file.id} style={styles.item}>
+              <Text>
+                {file.title} <Text style={{ fontSize: 10 }}>{file.desc}</Text>
+              </Text>
+              {role === 'admin' ? (
+                <Button
+                  title="download"
+                  onPress={() => {
+                    console.log('download ', file.title);
+                  }}
+                  height={25}
+                  fontSize={12}
+                />
+              ) : null}
+            </View>
+          ))}
+        </View>
+      );
+    }
   }
 
   return (
@@ -81,8 +146,10 @@ const HomeScreen = () => {
       <View>
         <View style={styles.buttonContainer}>
           <Button title="File Upload" onPress={handleFileUploadClick} />
+          {!!info && <Text style={styles.info}>{info}</Text>}
         </View>
         {content}
+        <Dashboard />
       </View>
     </BasicTemplate>
   );
@@ -92,13 +159,20 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: "100%",
-    display: "flex",
+    width: '100%',
+    display: 'flex',
     padding: 15,
+  },
+  info: {
+    width: '100%',
+    height: 30,
+    fontSize: 15,
+    padding: 15,
+    textAlign: 'center',
   },
   listContainer: {
     padding: 15,
-    display: "flex",
+    display: 'flex',
   },
   listTitle: {
     fontSize: 20,
@@ -106,12 +180,12 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 15,
-    display: "flex",
-    justifyContent: "space-between",
-    backgroundColor: "white",
+    display: 'flex',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
     borderRadius: 20,
     marginBottom: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 60,
   },
 });

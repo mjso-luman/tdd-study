@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { fetchFileList } from "../api/fileApi";
+import { useEffect, useState } from 'react';
+import { fetchFileList } from '../api/fileApi';
 // NOTE : 미사용 코드
 const useFileList = () => {
   const [files, setFiles] =
@@ -7,7 +7,7 @@ const useFileList = () => {
 
   useEffect(() => {
     fetchFileList().then((res) => {
-      if (!!res?.data) {
+      if (res?.data) {
         setFiles(res.data);
       }
     });

@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import theme from "../../../fixtures/theme";
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import theme from '../../../fixtures/theme';
 
 type TabProps = {
   id: string;
@@ -43,22 +43,22 @@ export default Tabs;
 
 const styles = StyleSheet.create({
   root: {
-    width: "100%",
+    width: '100%',
     height: 60,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
   },
   tabWrapper: {
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
     minWidth: 100,
-    height: "100%",
+    height: '100%',
     backgroundColor: theme.tabColor,
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   selectedTab: {
     borderBottomColor: theme.activeColor,
@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
   },
   tabTitle: {
     flex: 1,
-    height: "100%",
-    display: "flex",
+    height: '100%',
+    display: 'flex',
     lineHeight: 60,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

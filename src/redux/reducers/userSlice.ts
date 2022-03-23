@@ -1,19 +1,19 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
 export type UserType = {
-  role: "admin" | "general";
+  role: 'admin' | 'general';
 };
 
 const initialState: UserType = {
-  role: "general",
+  role: 'general',
 };
 
 export const UserSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
-    updateRole: (state, action: PayloadAction<"admin" | "general">) => {
+    updateRole: (state, action: PayloadAction<'admin' | 'general'>) => {
       state.role = action.payload;
     },
   },
