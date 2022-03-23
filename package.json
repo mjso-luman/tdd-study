@@ -23,11 +23,6 @@
       "prettier --write ."
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "dependencies": {
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/stack": "^6.1.1",
