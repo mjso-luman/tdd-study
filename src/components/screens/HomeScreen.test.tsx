@@ -3,7 +3,7 @@ import { fireEvent, waitFor, act } from '@testing-library/react-native';
 import { renderWithContext } from '../../../test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import { API_URL } from '../../fixtures/client';
-import { GET_FILE_LIST, UPLOAD_FILE } from '../../api/fileApi';
+import fileApi, { GET_FILE_LIST, UPLOAD_FILE } from '../../api/fileApi';
 import HomeScreen from './HomeScreen';
 import Client from '../../fixtures/client';
 import { files } from '../../fixtures/dummy';
@@ -127,4 +127,18 @@ describe('HomeScreen', () => {
     });
   });
   it.todo('should call download function with parameter');
+
+  it('should call postUploadFile on file upload', async () => {
+    mock
+      .onPost(postUploadFileEndpoint)
+      .reply(200, { status: 'waiting', waitingNumber: 3 });
+
+    const spyFn = jest.spyOn(fileApi, 'postUploadFile');
+    const screen = renderWithContext(<HomeScreen />);
+    await waitFor(() => {
+      const uploadButton = screen.getByTestId('upload-button');
+      fireEvent.press(uploadButton);
+      expect(spyFn).toBeCalled();
+    });
+  });
 });

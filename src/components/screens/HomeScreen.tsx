@@ -13,7 +13,7 @@ import Button from '../atoms/Button';
 import { useAppDispatch, useAppSelector } from '../../redux/store/hooks';
 import { updateRole, selectUser } from '../../redux/reducers/userSlice';
 import { useQuery } from 'react-query';
-import { fetchFileList, postUploadFile } from '../../api/fileApi';
+import FileApi from '../../api/fileApi';
 import Dashboard from '../molecules/DownloadFile';
 import { launchImageLibrary } from 'react-native-image-picker';
 
@@ -22,7 +22,7 @@ const HomeScreen = () => {
     isLoading,
     error,
     data: files,
-  } = useQuery('fetchFiles', fetchFileList);
+  } = useQuery('fetchFiles', FileApi.fetchFileList);
 
   // console.log("?? ", files);
 
@@ -89,7 +89,7 @@ const HomeScreen = () => {
 
     // console.log("[INFO] File Selection Result : ", result);
 
-    const response = await postUploadFile({ data: 'test' });
+    const response = await FileApi.postUploadFile({ data: 'test' });
     if (response?.data) {
       const { status } = response.data;
       if (status === 'waiting') {

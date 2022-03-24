@@ -3,7 +3,7 @@ import { files } from '../fixtures/dummy';
 export const GET_FILE_LIST = '/files';
 export const UPLOAD_FILE = '/uploadFile';
 
-export const fetchFileList = async () => {
+const fetchFileList = async () => {
   const res = await Client.get(GET_FILE_LIST);
   return res;
 
@@ -16,7 +16,7 @@ export const fetchFileList = async () => {
   }
 };
 
-export const postUploadFile = async (data: any) => {
+const postUploadFile = async (data: any) => {
   const res = await Client.post(UPLOAD_FILE, data, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -24,3 +24,5 @@ export const postUploadFile = async (data: any) => {
   });
   return res;
 };
+
+export default { fetchFileList, postUploadFile };
